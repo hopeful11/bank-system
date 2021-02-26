@@ -1,11 +1,12 @@
-class Atm:
+class Bank:
+    account_list = []
+
+class Atm(Bank):
     def __init__(self):
-        self.account_list = []
-        self.account_amount = 0
+        pass
 
     def open_a_bank_account(self, name, password):
-        self.account_list.append( Account(name, password, self.account_amount) )
-        self.account_amount += 1
+        self.account_list.append( Account(name, password) )
 
     def login(self, name, password):
         for obj in self.account_list:
@@ -13,12 +14,10 @@ class Atm:
                 return obj
         return None
 
-
 class Account:
-    def __init__(self, name, password, id):
+    def __init__(self, name, password):
         self.name = name
         self.password = password
-        self.id = id
         self.balance = 0
 
     def withdraw(self,amount):
@@ -45,6 +44,7 @@ class Account:
         pass
 
 a = Atm()
+b = Atm()
 a.open_a_bank_account("mary","123pasd123")
-b = a.login("mary", "123pasd123")
-print(b.name)
+b.open_a_bank_account("ahmet","123123")
+print(a.account_list)
