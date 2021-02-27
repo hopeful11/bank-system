@@ -1,20 +1,27 @@
 class Bank:
-    account_file = open("./accounts.txt", "w+")
+    account_file = open("./accounts.txt", "r+")
     account_list = []
 
 class Atm(Bank):
     def __init__(self):
-        Bank.__init__()
         pass
 
     def open_a_bank_account(self, name, password):
         self.account_list.append( Account(name, password) )
+        self.account_file.write(f"{name},{password}\n")
 
     def login(self, name, password):
         for obj in self.account_list:
             if obj.name == name and obj.password == password:
                 return obj
-        return None
+
+        for line in self.account_file.readlines():
+            account_datas = line.split(",") # 0 is name and 1 is password
+            print(account_datas, name, password)
+            if account_datas[0] == name and account_datas[1] == password:
+                print("you did it!! i think")
+                self.account_file.tell()
+
 
 class Account:
     def __init__(self, name, password):
@@ -46,7 +53,7 @@ class Account:
         pass
 
 a = Atm()
-a.open_a_bank_account("mary","123pasd123")
-b = a.login("mary","123pasd123")
-b.deposit(500)
-b.get_balance()
+#a.open_a_bank_account("mary","123pasd123")
+a.login("mary","123pasd123")
+#b.deposit(500)
+#b.get_balance()
