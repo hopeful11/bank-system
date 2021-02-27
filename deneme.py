@@ -1,8 +1,10 @@
 class Bank:
+    account_file = open("./accounts.txt", "w+")
     account_list = []
 
 class Atm(Bank):
     def __init__(self):
+        Bank.__init__()
         pass
 
     def open_a_bank_account(self, name, password):
@@ -44,7 +46,7 @@ class Account:
         pass
 
 a = Atm()
-b = Atm()
 a.open_a_bank_account("mary","123pasd123")
-b.open_a_bank_account("ahmet","123123")
-print(a.account_list)
+b = a.login("mary","123pasd123")
+b.deposit(500)
+b.get_balance()
