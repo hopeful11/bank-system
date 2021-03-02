@@ -36,7 +36,7 @@ class Atm:
 
     def exit_atm(self):
         print("CyA")
-        return 0
+        exit()
 
 class Account:
     def __init__(self, name, password):
@@ -70,6 +70,9 @@ class Account:
         self.__del__(self)
         return
 
+    def return_to_main_menu(self):
+        return 0
+
     def loop(self):
         while(1):
             temp = input("""This is your account:
@@ -91,6 +94,9 @@ class Account:
                 self.change_account_information()
             elif temp == '6':
                 self.delete_account()
+            elif temp == '7':
+                return self.return_to_main_menu()
 
-with open("./accounts.txt", "w+") as account_file:
-    a = Atm(account_file)
+if __name__ == "__main__":
+    with open("./accounts.txt", "w+") as account_file:
+        a = Atm(account_file)
