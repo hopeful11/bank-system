@@ -95,6 +95,8 @@ class Account:
                 return self.delete_account()
             elif temp == '7':
                 return False
+            else:
+                print("Dogru deger girin")
 
 def set_account_list(account_file):
     account_list = []
