@@ -13,9 +13,9 @@ class Atm:
         password = input("Enter your password: ")
         for obj in self.account_list:
             if obj.name == name and obj.password == password:
-                is_del = obj.loop(account_list)
+                is_del = obj.loop(self.account_list)
                 if is_del == True:
-                    account_list.remove(obj)
+                    self.account_list.remove(obj)
 
     def loop(self):
         while(1):
