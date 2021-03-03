@@ -6,7 +6,7 @@ class Atm:
     def open_a_bank_account(self):
         name = input("Enter your name: ")
         password = input("Enter your password: ")
-        self.account_list.append( Account(name, password) )
+        self.account_list.append( Account(name, password, 0) )
 
     def login(self):
         name = input("Enter your name: ")
@@ -41,7 +41,7 @@ class Account:
 
     def withdraw(self):
         amount = int(input("Set the amount: "))
-        self.balance -= amount
+        self.balance -= amount      # amount - olmicak
 
     def deposit(self):
         amount = int(input("Set the amount: "))
@@ -59,7 +59,7 @@ class Account:
                 self.balance = str(int(self.balance) - amount)
                 obj.balance = str(int(obj.balance) + amount)
                 return
-
+        print("Gecersiz bir kullanici girdiniz")
 
     def change_account_information(self):
         name = input("Enter your new name: ")
@@ -67,8 +67,11 @@ class Account:
         self.name = name
         self.password = password
 
+    def delete_account(self):
+        return True
+
     def loop(self, account_list):
-        self.account_list = account_list
+        self.account_list = account_list        #guncel olsun diye burda listi gonderiyoruz
         while(1):
             temp = input("""This is your account:
             1) withdraw
@@ -89,9 +92,9 @@ class Account:
             elif temp == '5':
                 self.change_account_information()
             elif temp == '6':
-                return 1
+                return self.delete_account()
             elif temp == '7':
-                return 0
+                return False
 
 def set_account_list(account_file):
     account_list = []
@@ -105,13 +108,15 @@ def end_account_file(account_file, account_list):
     for i in account_list:
         account_file.write(f"{i.name},{i.password},{i.balance}\n")
 
-
-if __name__ == "__main__":
+def main():
     with open("./accounts.txt", "r+") as account_file:
         account_list = set_account_list(account_file)
     Atm(account_list)
     with open("./accounts.txt", "w+") as account_file:
         end_account_file(account_file, account_list)
+
+if __name__ == "__main__":
+    main()
 
 
 
