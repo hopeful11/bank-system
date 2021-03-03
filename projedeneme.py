@@ -1,145 +1,167 @@
-class Bank:                                      #class silinebilir
-    account_list = []
-    account_file = open("accounts.txt", "w+")
-
-class ATM(Bank):
+class Atm:
     def __init__(self, account_list):
-        self.account_list=account_list
+        self.account_list = account_list
         self.loop()
 
-    def loop(self):
-        while True:
-            option=input("""welcome,enter your choice.
-             1=open an account
-             2=login
-             3=exit""")
-
-            if option=="1":
-                self.open_an_account()
-            elif option=="2":
-                self.login()
-            elif option=="3":
-                self.exit()
-            elif option!="1"and "2" and "3":
-                print("I'm sorry, that is not an option\n")
-            else:
-                pass
-
-    def open_an_account(self):                               #balance eklenilecek
-        name=input("please enter your name")
-        password=input("please enter your password")
-        self.account_list.append(Account(name, password))
-
+    def open_a_bank_account(self):
+        name = input("Enter your name: ")
+        password = input("Enter your password: ")
+        self.account_list.append( Account(name, password, 0) )
 
     def login(self):
-        name = input("please enter your name:")
-        password = input("please enter your password:")
-        for obj in self.account_list:
-            if  obj.name == name and obj.password == password:
-                 is_del = obj.loop(self.account_list)
-                 if is_del == True:
-                     self.account_list.remove(obj)
+        found = False
+        for i in range(3):
+            name = input("Enter your name: ")
+            password = input("Enter your password: ")
+            found = False
+            for obj in self.account_list:
+                if obj.name == name and obj.password == password:
+                    found = True
+                    is_del = obj.loop(self.account_list)
+                    if is_del == True:
+                        self.account_list.remove(obj)
+            if found == False:
+                print("Wrong combination, please try again")
+            else: break
+        if found == False:
+            print("3 in a row, you got kicked mate!")
 
-
-    def exit(self):
-        exit()
+    def loop(self):
+        while(1):
+            option = input("""Welcome:
+    1) Open a bank account
+    2) Login
+    3) Exit
+""")
+            if option == '1':
+                self.open_a_bank_account()
+            elif option == '2':
+                self.login()
+            elif option == '3':
+                return 0
+            else:
+                print("I'm sorry, that is not a valid option\n")
 
 class Account:
-    def __init__(self,name,password,balance):
-        self.name=name
-        self.password=password
-        self.balance=balance
-
-    def loop(self,account_list):
-        self.account_list = account_list
-        while True:
-            option=input("""welcome,enter your choice.
-                         1=withdraw
-                         2=deposit
-                         3=get balance
-                         4=transfer
-                         5=change account information
-                         6=delete the account
-                         7=return to main menu""")
-            if option == "1":
-                self.withdraw()
-            elif option == "2":
-                self.deposit()
-            elif option == "3":
-                self.get_balance()
-            elif option == "4":
-                self.transfer()
-            elif option == "5":
-                self.change_account_information()
-            elif option == "6" :
-                return 1
-            elif option == "7" :
-                return 0
-            elif option!="1"and "2" and "3" and "4" and "5" and "6" and "7":
-                print("I'm sorry, that is not an option\n")
+    def __init__(self, name, password, balance):
+        self.name = name
+        self.password = password
+        self.balance = balance
 
     def withdraw(self):
-       while True:
-        try:
-           amount = int(input("enter the amount"))
-           if self.balance > amount:
-                self.balance-=amount
-           else:
-               print("your balance is insufficient\n")
-        except ValueError:
-            print("You entered wrong value\n")
-        else:
-            break
+        while True:
+            try:
+                amount = int(input("Enter the amount: "))
+                if self.balance >= amount:
+                    self.balance -= amount
+                else:
+                    print("Your balance is insufficient!")
+                    break
+            except ValueError:
+                print("Please enter a number!")
 
     def deposit(self):
-       while True:
-        try:
-           amount = int(input("enter amount"))
-           self.balance+=amount
-        except ValueError:
-            print("You entered wrong value\n")
-        else:
-            break
+        while True:
+            try:
+                amount = int(input("Enter the amount: "))
+                if amount >= 0:
+                    self.balance += amount
+                else:
+                    print("You must deposit positif amount of money!")
+                    continue
+            except ValueError:
+                print("Please give a number!")
+            else:
+                break
 
     def get_balance(self):
         print(self.balance)
 
     def transfer(self):
-        name=(input("Who you like to transfer to:"))
-        amount=int(input("enter the amount"))
-        for i in self.account_list:
-             if i.name == name:
-                 self.balance = str(int(self.balance) - amount)
-                 i.balance = str(int(i.balance) + amount)
-                 return
+        while True:
+            name = input("Who would you like to transfer to: ")
+            obj = 0
+            for temp in self.account_list:
+                if temp.name == name:
+                    obj = temp
+                    break
+            if obj == 0:
+                print("Please enter an exist customer name!")
+            else:
+                break
+
+        while True:
+            try:
+                amount = int(input("Enter the amount: "))
+                if amount >= 0:
+                    self.balance -= amount
+                    obj.balance += amount
+                else:
+                    print("You must transfer positif amount of money!")
+                    continue
+            except ValueError:
+                print("Please give a number!")
+            else:
+                return
 
     def change_account_information(self):
-        new_name=input("enter your newname")
-        new_password=input("enter your newpassword")
-        self.name=new_name
-        self.password=new_password
-        print("newname:",self.name,"\nnewpassword:",self.password)
+        name = input("Enter your new name: ")
+        password = input("Enter your new password: ")
+        self.name = name
+        self.password = password
+        print(f"Your new name is: {self.name}\nNew password is: {self.password}")
 
-    # def __del__(self):           #düzeltilecek
-    #     print("Account deleted")
-    #     return 0
+    def delete_account(self):
+        return True
 
-    def set_account_list(account_file):
-        account_list = []
-        for lines in account_file.readlines():
-            account_data = lines.split(",")
-            account_list.append( Account(account_data[0], account_data[1], account_data[2][:-1]))
-        return account_list
+    def loop(self, account_list):                       #for to see other account to transfer
+        self.account_list = account_list
 
-    def end_account_file(account_file, account_list):
-        account_file.seek(0)
-        for i in account_list:
-            account_file.write(f"{i.name},{i.password},{i.balance}\n")
+        while(1):
+            temp = input(f"""This is {self.name}'s account:
+    1) withdraw
+    2) deposit
+    3) get balance
+    4) transfer money
+    5) change account information
+    6) delete account
+    7) return to main menu
+""")
+            if temp == '1':
+                self.withdraw()
+            elif temp == '2':
+                self.deposit()
+            elif temp == '3':
+                self.get_balance()
+            elif temp == '4':
+                self.transfer()
+            elif temp == '5':
+                self.change_account_information()
+            elif temp == '6':
+                return self.delete_account()
+            elif temp == '7':
+                return False
+            else:
+                print("Please enter a valid option!")
 
-    if __name__ == "__main__":
-        with open("./accounts.txt", "r+") as account_file:
-            account_list = set_account_list(account_file)
-        ATM(account_list)
-        with open("accounts.txt", "w+") as account_file:
-            end_account_file(account_file, account_list)
+def set_account_list(account_file):
+    account_list = []
+    for lines in account_file.readlines():
+        account_data = lines.split(",")     #name pass balance
+        account_list.append( Account(account_data[0], account_data[1], int(account_data[2][:-1])) ) #"\n"
+    return account_list
 
+def end_account_file(account_file, account_list):
+    account_file.seek(0)
+    for i in account_list:
+        account_file.write(f"{i.name},{i.password},{i.balance}\n")
+
+def main():
+    with open("./accounts.txt", "r+") as account_file:
+        account_list = set_account_list(account_file)
+    Atm(account_list)
+    with open("./accounts.txt", "w+") as account_file:
+        end_account_file(account_file, account_list)
+
+if __name__ == "__main__":
+    main()
